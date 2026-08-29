@@ -13,6 +13,23 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 
+@app.get(
+    "/order/active-orders",
+    summary="Get active orders",
+    description="Returns a list of active orders for the user",
+    tags=["Orders"],
+    response_description="List of active orders",
+    deprecated=False
+    
+)
+def get_active_orders():
+
+    return {
+        "active_orders": [
+            {"id": 1, "item": "Pizza", "status": "preparing"},
+            {"id": 2, "item": "Burger", "status": "out for delivery"},
+        ]
+    }
 
 @app.get("/")
 def read_root():
@@ -51,4 +68,15 @@ def list_order():
         "delivered": 3,
         "pending": 0,
         "top_city": "Bangalore"
+    }
+
+
+@app.get("/debug/request-info")
+async def request_info(request: Request):
+    """Debug endpoint - Returns information about the incoming request"""
+    return {
+        "method": request.method,
+        "url": str(request.url),
+        "headers": dict(request.headers),
+        "query_params": dict(request.query_params),
     }
